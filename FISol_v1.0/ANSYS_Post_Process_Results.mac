@@ -1,0 +1,135 @@
+/POST1
+KEYW,PR_SGVOF,1 
+/NERR,5,10000, ,0,5,
+/UIS,MSGPOP,3
+!*AFUN,DEG
+
+CMSEL, S, Nodes_Circ, Node
+
+*GET, NUMBSET, ACTIVE, 0, SET, NSET
+
+!Create arrays to hold node coordinates and stress components
+*get,maxnode,node,,num,max ! highest node number
+*get,numnodes,node,,count ! number of selected nodes
+
+*cfopen,'RESULTS','csv','.' 
+
+!!*VWRITE, 'Node number', 'Time','epelx ','epely ','epelz ','epelxy','epelyz','epelxz','epplx ','epply ','epplz ','epplxy','epplyz','epplxz','sx','sy ','sz ','sxy','syz'
+!!%C, %C, %C, %C, %C, %C, %C, %C, %C, %C, %C, %C, %C, %C, %C, %C, %C, %C, %C, %C
+
+!!!!! LOAD STEP LOOPING !!!!!
+*DO, j, 1, NUMBSET
+
+SET,,,,,,,j
+!
+*del,nNumber,,nopr
+*del,nCcoord,,nopr
+*del,nStress,,nopr
+*del,mymask,,nopr
+*del,nStrainEl,,nopr
+*del,nStrainPl,,nopr
+!
+*dim,nNumber,array,maxnode,1 ! node numbers
+*dim,nCcoord,array,maxnode,3 ! node coordinates x,y,z
+*dim,nStress,array,maxnode,6 ! node stress components
+*dim,nStrainEl,array,maxnode,6 ! node strain el components
+*dim,nStrainPl,array,maxnode,6 ! node strain pl components
+!
+! Create a node masking array for further array work in case
+! node numbering is not continuous, or nodes are not selected.
+CMSEL, S, Nodes_Circ, Node
+*dim,mymask,array,maxnode
+*vget,mymask(1),node,1,nsel ! fill with status values
+ALLS
+!
+! *VGET coordinates of the nodes
+*vmask,mymask(1)
+*vget,nCcoord(1,1),node,,loc,x
+*vmask,mymask(1)
+*vget,nCcoord(1,2),node,,loc,y
+*vmask,mymask(1)
+*vget,nCcoord(1,3),node,,loc,z
+! *VGET number of the nodes
+*vmask,mymask(1)
+*vget,nNumber,node,,nlist
+!
+! *VGET stress components of the nodes
+*vmask,mymask(1)
+*vget,nStress(1,1),node,1,s,x
+*vmask,mymask(1)
+*vget,nStress(1,2),node,1,s,y
+*vmask,mymask(1)
+*vget,nStress(1,3),node,1,s,z
+*vmask,mymask(1)
+*vget,nStress(1,4),node,1,s,xy
+*vmask,mymask(1)
+*vget,nStress(1,5),node,1,s,yz
+*vmask,mymask(1)
+*vget,nStress(1,6),node,1,s,xz
+! *VGET strain el components of the nodes
+*vmask,mymask(1)
+*vget,nStrainEl(1,1),node,1,EPEL,x
+*vmask,mymask(1)
+*vget,nStrainEl(1,2),node,1,EPEL,y
+*vmask,mymask(1)
+*vget,nStrainEl(1,3),node,1,EPEL,z
+*vmask,mymask(1)
+*vget,nStrainEl(1,4),node,1,EPEL,xy
+*vmask,mymask(1)
+*vget,nStrainEl(1,5),node,1,EPEL,yz
+*vmask,mymask(1)
+*vget,nStrainEl(1,6),node,1,EPEL,xz
+! *VGET strain pl components of the nodes
+*vmask,mymask(1)
+*vget,nStrainPl(1,1),node,1,EPPL,x
+*vmask,mymask(1)
+*vget,nStrainPl(1,2),node,1,EPPL,y
+*vmask,mymask(1)
+*vget,nStrainPl(1,3),node,1,EPPL,z
+*vmask,mymask(1)
+*vget,nStrainPl(1,4),node,1,EPPL,xy
+*vmask,mymask(1)
+*vget,nStrainPl(1,5),node,1,EPPL,yz
+*vmask,mymask(1)
+*vget,nStrainPl(1,6),node,1,EPPL,xz
+!
+! Compress out the midside node zeros…
+! Want nStress2 array to contain stress components at locations in nNumber2 array
+!
+!*del,nNumber2,,nopr
+!*del,nCcoord2,,nopr
+!*del,nStress2,,nopr
+!*del,nStrainEl2,,nopr
+!*del,nStrainPl2,,nopr
+!*dim,nNumber2,array,numnodes,1
+!*dim,nCcoord2,array,numnodes,3 ! compressed file of coordinates
+!*dim,nStress2,array,numnodes,6 ! compressed file of stresses
+!*dim,nStrainEl2,array,numnodes,6 ! compressed file of elastic strainStress
+!*dim,nStrainPl2,array,numnodes,6 ! compressed file of plastic strains
+
+!*do,ii,1,3 ! compress 3 coordinates
+!*vmask,mymask(1)
+!*vfun,nCcoord2(1,ii),COMP,nCcoord(1,ii)
+!*enddo
+!*do,ii,1,6 ! compress 6 stresses
+!*vmask,mymask(1)
+!*vfun,nStress2(1,ii),COMP,nStress(1,ii)
+!*vfun,nStrainEl2(1,ii),COMP,nStrainEl(1,ii)
+!*vfun,nStrainPl2(1,ii),COMP,nStrainPl(1,ii)
+!*enddo
+
+!*vmask,mymask(1)
+!*vfun,nNumber(1),COMP,nNumber2(1)
+
+*vmask,mymask(1)
+*VWRITE, nNumber(1), J,nStrainEl(1,1),nStrainEl(1,2), nStrainEl(1,3), nStrainEl(1,4), nStrainEl(1,5), nStrainEl(1,6), nStrainPl(1,1), nStrainPl(1,2), nStrainPl(1,3), nStrainPl(1,4), nStrainPl(1,5), nStrainPl(1,6), nStress(1,1),nStress(1,2),nStress(1,3),nStress(1,4),nStress(1,5),nStress(1,6)
+%F,%F,%E,%E,%E,%E,%E,%E,%E,%E,%E,%E,%E,%E,%G,%G,%G,%G,%G,%G
+
+*ENDDO
+*CFCLOS
+
+*cfopen,'COORD','csv','.'
+*vmask,mymask(1)
+*VWRITE, nNumber(1),nCcoord(1,1),nCcoord(1,2),nCcoord(1,3)
+%F,%F,%F,%F
+*CFCLOS
