@@ -9,12 +9,9 @@ clear all
 close all
 clc
 %%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FileName = 'Results.csv'; % File name of Ansys results
-FileNameCoord = 'COORD.csv'; % File name of nodal coordinates
 LoadSteps = [2,1]; % Bending Blocks
 R = -1; % Load ratio
 kFin = 0.668; % Findley material parameter
-OmegaSimm = 2*pi; % Symmetry on omega
 %%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -26,6 +23,9 @@ OmegaSimm = 2*pi; % Symmetry on omega
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% START DATA READING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+FileName = 'Results.csv'; % File name of Ansys results
+FileNameCoord = 'COORD.csv'; % File name of nodal coordinates
+OmegaSimm = 2*pi; % Symmetry on omega
 RESULTS = importdata(FileName);
 Files = find(RESULTS(:,2) == 1);
 count = diff(RESULTS(:,2)) == 0;
