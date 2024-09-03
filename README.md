@@ -1,8 +1,8 @@
 # FI-Sol
 
-Closed form solution of critical plane factor of Findley. The algorithm works under the hypotheses of linear-elasticity and proportional loading.
+This repository contains the code for the FI-Sol method, an analytical algorithm designed to efficiently calculate the Findley critical plane factor in fatigue analysis. Traditional methods for critical plane analysis can be computationally intensive, especially in complex geometries or loading conditions. FI-Sol addresses this by leveraging tensor invariants and coordinate transformations, significantly reducing computation time while providing accurate results.
 
-- FISol_v1.0 (it includes *Findley* critical plane factor)
+The method can be used for linear-elastic materials under proportional loading conditions and has been validated on various geometries, including welded joints and tubular specimens. This repository includes the algorithm, validation data, and examples, making it a valuable resource for researchers and engineers working on fatigue assessment.
 
 The mathematical procedure is described in the article:
 
